@@ -9,7 +9,7 @@ Aegis is an ultra-low latency, conversational Retrieval-Augmented Generation (RA
 ## 📌 Submission Deliverables & Links
 
 * **Hackathon Release Tag:** PRISM_GENAI_HACKATHON_Y2026
-* **Demo Video Link (YouTube / Drive):** *[Click here to watch the Demo Video](https://your-video-link-here)* *(Replace with your unlisted YouTube or Google Drive link)*
+* **Demo Video Link (YouTube / Drive):** *[Click here to watch the Demo Video](https://drive.google.com/file/d/11YE5tzn1XtS09P18pabqhoy7KuI7gPUi/view?usp=sharing)*
 * **Presentation (PPT):** Included in repository: [./presentation.pptx](./presentation.pptx) *(or link here if hosted on Drive)*
 * **Architecture & Benchmark Report:** Documented below and in [eval/report.md](eval/report.md)
 
