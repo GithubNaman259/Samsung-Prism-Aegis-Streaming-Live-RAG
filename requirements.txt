@@ -1,0 +1,13 @@
+# Core runtime — this is the entire required dependency set.
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27,<1.0
+pydantic>=2.5,<3.0
+numpy>=1.24
+websockets>=12.0
+
+# Optional. Nothing below is needed for the demo, the eval harness, or the
+# reported metrics — each has a working in-process fallback (see README §Design).
+#   redis>=5.0                 # session store; falls back to in-memory TTL dict
+#   anthropic>=0.39            # LLM path; falls back to deterministic heuristics
+#   sentence-transformers>=2.6 # bge embeddings + cross-encoder; falls back to
+#                              # a hashed n-gram encoder and a lexical reranker

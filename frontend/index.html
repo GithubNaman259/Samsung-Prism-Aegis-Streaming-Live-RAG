@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000010" />
+    <title>Aegis — Streaming Live RAG</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+
+    <header class="nav">
+      <a class="brand" href="#" aria-label="Aegis home">
+        <span class="brand-mark"><span></span></span>
+        <span>
+          <strong>Aegis</strong>
+          <small>Streaming Live RAG</small>
+        </span>
+      </a>
+
+      <div class="nav-center">
+        <span class="trust-dot"></span>
+        <span>PRISM_GENAI_HACKATHON_Y2026</span>
+      </div>
+
+      <div class="system-pill" id="status">
+        <span class="dot" id="conn-dot"></span>
+        <span id="conn-text">connecting…</span>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="hero">
+        <div class="eyebrow">
+          <span class="eyebrow-line"></span><span>LIVE REASONING ENGINE</span
+          ><span class="eyebrow-line"></span>
+        </div>
+        <h1>Ask naturally.<br /><span>Watch Aegis reason live.</span></h1>
+        <p class="hero-copy">
+          Streaming retrieval that searches while you speak, preserves context,
+          and grounds every answer in your corpus.
+        </p>
+      </section>
+
+      <section class="composer glass-card" id="composer-card">
+        <div class="composer-topline">
+          <span class="input-label">Ask Aegis</span>
+          <span class="live-state" id="live-state"><i></i> Ready</span>
+        </div>
+        <div class="composer-row">
+          <div class="input-wrap">
+            <span class="input-glow"></span>
+            <input
+              id="utterance"
+              type="text"
+              autocomplete="off"
+              placeholder="Find a venue for 30 people in Pune and retrieve its cancellation policy…"
+            />
+            
+          </div>
+          
+<button
+              id="mic"
+              class="icon-button"
+              title="Voice input"
+              aria-label="Voice input"
+            >
+    <img src="/static/mic.png" alt="mic" class="mic-img" style="height: 22px; width: auto; object-fit: contain;">
+    <span class="wave wave-a"></span>
+    <span class="wave wave-b"></span>
+    <span class="wave wave-c"></span>
+</button>
+<button id="send" class="send-button">
+            <span>Send</span>
+          </button>
+        </div>
+        <div class="composer-meta">
+          <span><kbd>Enter</kbd> to send</span>
+          <span class="meta-separator"></span>
+          <span id="live-help"
+            >Aegis can begin speculative retrieval before you finish
+            speaking.</span
+          >
+        </div>
+      </section>
+
+      <section class="activity glass-card" id="activity-card">
+        <div class="section-head">
+          <div>
+            <span class="section-kicker">STREAM</span>
+            <h2>Live activity</h2>
+          </div>
+          <div class="stream-clock" id="stream-clock">0.0s</div>
+        </div>
+
+        <div class="activity-stage" id="activity-stage">
+          <div class="stage-orb" id="stage-orb"><span></span></div>
+          <div class="stage-copy">
+            <strong id="stage-title">Ready for your question</strong>
+            <span id="stage-detail"
+              >Speak or type a compound request. Aegis will surface retrieval
+              decisions as they happen.</span
+            >
+          </div>
+          <div class="stage-badge" id="stage-badge">IDLE</div>
+        </div>
+
+        <div class="activity-grid">
+          <div class="activity-item" id="spec-item">
+            <div class="activity-icon speculate-icon"><span></span></div>
+            <div class="activity-copy">
+              <span>Speculative search</span><strong id="spec-time">—</strong>
+            </div>
+            <small id="spec-detail">Starts while you are still speaking</small>
+          </div>
+          <div class="activity-item" id="retrieve-item">
+            <div class="activity-icon retrieve-icon"><span></span></div>
+            <div class="activity-copy">
+              <span>Final retrieval</span><strong id="retrieve-time">—</strong>
+            </div>
+            <small id="retrieve-detail"
+              >Runs after the utterance is complete</small
+            >
+          </div>
+          <div class="activity-item" id="token-item">
+            <div class="activity-icon token-icon"><span></span></div>
+            <div class="activity-copy">
+              <span>First token</span><strong id="token-time">—</strong>
+            </div>
+            <small id="token-detail">Grounded answer begins streaming</small>
+          </div>
+        </div>
+
+        <div class="timeline-wrap">
+          <div class="timeline-label">
+            <span>REASONING TRACE</span
+            ><span id="timeline-count">0 events</span>
+          </div>
+          <div id="timeline" class="timeline"></div>
+        </div>
+
+        <div class="query-area">
+          <div class="mini-head">
+            <span>Sub-queries</span><span id="query-count">0</span>
+          </div>
+          <div id="subqueries" class="chips"></div>
+        </div>
+      </section>
+
+      <section class="results-grid">
+        <div class="result-column">
+          <div class="section-head result-head">
+            <div>
+              <span class="section-kicker">GROUNDED OUTPUT</span>
+              <h2>Answer</h2>
+            </div>
+            <span id="version" class="version">v0</span>
+          </div>
+          <section class="answer-card glass-card" id="answer-card">
+            <div id="answer" class="answer">
+              <div class="answer-empty">
+                <div class="empty-orb"></div>
+                <p>Your grounded answer will appear here.</p>
+              </div>
+            </div>
+            <div id="uncertainty" class="uncertainty hidden"></div>
+          </section>
+
+          <section class="evidence-card glass-card">
+            <div class="section-head compact">
+              <div>
+                <span class="section-kicker">SOURCE TRACE</span>
+                <h2>Evidence</h2>
+              </div>
+              <span class="hint">Click a citation to inspect</span>
+            </div>
+            <div id="inspector" class="inspector">
+              <p class="placeholder">No citation selected.</p>
+            </div>
+          </section>
+        </div>
+
+        <aside class="side-column">
+          <section class="metrics-card glass-card">
+            <div class="section-head compact">
+              <div>
+                <span class="section-kicker">TELEMETRY</span>
+                <h2>This turn</h2>
+              </div>
+            </div>
+            <div class="scoreboard" id="scoreboard">
+              <div class="metric">
+                <span class="mv" id="m-ttft">—</span
+                ><span class="ml">TTFT</span>
+              </div>
+              <div class="metric">
+                <span class="mv" id="m-calls">—</span
+                ><span class="ml">Retrieval</span>
+              </div>
+              <div class="metric">
+                <span class="mv" id="m-tokens">—</span
+                ><span class="ml">Tokens</span>
+              </div>
+              <div class="metric">
+                <span class="mv" id="m-cost">—</span
+                ><span class="ml">Cost</span>
+              </div>
+            </div>
+            <div class="decision-list" id="decisions"></div>
+          </section>
+
+          <section class="demo-card glass-card">
+            <div class="section-head compact">
+              <div>
+                <span class="section-kicker">DEMO MODE</span>
+                <h2>Quick scenarios</h2>
+              </div>
+            </div>
+            <div class="demo-grid">
+              <button class="demo-button" data-script="fresh">
+                <span>01</span><b>Multi-intent</b><small>Parallel search</small>
+              </button>
+              <button class="demo-button" data-script="refine">
+                <span>02</span><b>Late constraint</b
+                ><small>Refine answer</small>
+              </button>
+              <button class="demo-button" data-script="suppress">
+                <span>03</span><b>Presentation-only</b
+                ><small>Reuse evidence</small>
+              </button>
+              <button class="demo-button" data-script="gauntlet">
+                <span>04</span><b>Trust gauntlet</b
+                ><small>Grounding test</small>
+              </button>
+            </div>
+            <button id="reset" class="reset-button">Reset session</button>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Aegis</span><span>·</span><span>Streaming Live RAG</span
+      ><span>·</span><span id="footer-status">Corpus connected</span>
+    </footer>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

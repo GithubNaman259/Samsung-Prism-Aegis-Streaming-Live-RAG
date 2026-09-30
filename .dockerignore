@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.git/
+.venv/
+venv/
+runlogs/
+.pytest_cache/
+corpus/index.json

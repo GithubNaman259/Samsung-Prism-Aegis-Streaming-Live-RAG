@@ -1,0 +1,26 @@
+{"id": "q01", "type": "single", "query": "How many people does Orchid Hall seat in boardroom layout?", "gold_chunk_ids": ["Doc_01#c1"]}
+{"id": "q02", "type": "single", "query": "What is the cancellation fee inside 7 days of the event?", "gold_chunk_ids": ["Doc_03#c1"]}
+{"id": "q03", "type": "single", "query": "Who has to authorise a cancellation inside 48 hours?", "gold_chunk_ids": ["Doc_03#c2"]}
+{"id": "q04", "type": "single", "query": "When does the catering headcount lock?", "gold_chunk_ids": ["Doc_04#c1"]}
+{"id": "q05", "type": "single", "query": "What is the per head cost of the non-vegetarian catering menu?", "gold_chunk_ids": ["Doc_05#c3"]}
+{"id": "q06", "type": "single", "query": "How much notice is needed for vegan and gluten free dietary requirements?", "gold_chunk_ids": ["Doc_05#c2"]}
+{"id": "q07", "type": "single", "query": "What is the deadline for submitting an expense claim?", "gold_chunk_ids": ["Doc_07#c2"]}
+{"id": "q08", "type": "single", "query": "What approval does the late booking exception require?", "gold_chunk_ids": ["Doc_08#c2"]}
+{"id": "q09", "type": "single", "query": "How many days notice is required for international travel booking?", "gold_chunk_ids": ["Doc_10#c1"]}
+{"id": "q10", "type": "single", "query": "What is the domestic per diem rate in metro cities?", "gold_chunk_ids": ["Doc_11#c1"]}
+{"id": "q11", "type": "single", "query": "What budget threshold requires finance partner sign off for an event?", "gold_chunk_ids": ["Doc_12#c1"]}
+{"id": "q12", "type": "single", "query": "What is the nightly hotel rate cap in metro cities?", "gold_chunk_ids": ["Doc_14#c2"]}
+{"id": "q13", "type": "single", "query": "Which Pune venues are not step free or lack an accessible restroom?", "gold_chunk_ids": ["Doc_16#c2"]}
+{"id": "q14", "type": "single", "query": "How long are recordings of internal events retained?", "gold_chunk_ids": ["Doc_17#c2"]}
+{"id": "q15", "type": "single", "query": "When is a purchase order required for a vendor engagement?", "gold_chunk_ids": ["Doc_15#c3"]}
+{"id": "q16", "type": "multi", "query": "I need a Pune venue for 30 people and I want to know the cancellation policy and the catering options", "gold_chunk_ids": ["Doc_01#c1", "Doc_03#c1", "Doc_05#c1"]}
+{"id": "q17", "type": "multi", "query": "What is the cancellation fee inside 7 days and does catering get charged as well?", "gold_chunk_ids": ["Doc_03#c1", "Doc_04#c1", "Doc_04#c2"]}
+{"id": "q18", "type": "multi", "query": "Compare venue capacity in Pune and Bangalore and tell me the rate difference between regions", "gold_chunk_ids": ["Doc_01#c1", "Doc_02#c1", "Doc_02#c3"]}
+{"id": "q19", "type": "multi", "query": "How do I book domestic travel and what per diem do I get in Pune?", "gold_chunk_ids": ["Doc_09#c1", "Doc_09#c2", "Doc_11#c1"]}
+{"id": "q20", "type": "multi", "query": "What is the expense submission deadline and what happens if I submit the claim 70 days late?", "gold_chunk_ids": ["Doc_07#c2", "Doc_08#c1"]}
+{"id": "q21", "type": "multi", "query": "Book Whitefield Pavilion for external guests and tell me the notice period and the catering service levy", "gold_chunk_ids": ["Doc_02#c2", "Doc_06#c4"]}
+{"id": "q22", "type": "multi", "query": "I want an accessible venue in Pune with in house catering and I need to know the equipment included", "gold_chunk_ids": ["Doc_16#c1", "Doc_06#c1", "Doc_01#c3"]}
+{"id": "q23", "type": "multi", "query": "What approvals do I need for an event with 60 attendees above 150000 rupees budget?", "gold_chunk_ids": ["Doc_12#c1", "Doc_12#c2"]}
+{"id": "q24", "type": "multi", "query": "If I reschedule the offsite instead of cancelling does the catering charge still apply?", "gold_chunk_ids": ["Doc_03#c3", "Doc_18#c3"]}
+{"id": "q25", "type": "multi", "query": "Tell me the international flight class rules and whether visa costs are reimbursable", "gold_chunk_ids": ["Doc_10#c2", "Doc_10#c3"]}
+{"id": "q26", "type": "multi", "query": "The Baner Annexe has no kitchen so how do I arrange catering and claim it back?", "gold_chunk_ids": ["Doc_06#c3", "Doc_07#c1"]}

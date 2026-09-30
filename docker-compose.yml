@@ -1,0 +1,26 @@
+services:
+  aegis:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # Redis is used when reachable; the app falls back to an in-process TTL
+      # store if it is not, so the stack still comes up if redis fails.
+      AEGIS_REDIS_URL: redis://redis:6379/0
+      AEGIS_EMBEDDING_BACKEND: local
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    # No persistence: the brief forbids cross-session state, so the session
+    # store must not survive a restart. Enforced here, not just in code.
+    command: redis-server --save "" --appendonly no
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
