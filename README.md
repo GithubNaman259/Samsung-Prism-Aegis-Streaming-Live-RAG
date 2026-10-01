@@ -20,7 +20,7 @@ engine for real-time conversational interfaces.
 
 -   🎥 **[Demo Video --- Google
     Drive](https://drive.google.com/file/d/11YE5tzn1XtS09P18pabqhoy7KuI7gPUi/view?usp=sharing)**
--   📊 **[Final Presentation](./Aegis_Samsung_PRISM.pptx)**
+-   📊 **[Final Presentation](https://docs.google.com/presentation/d/1cOkf3m1hIk4gn8sUGFUrRhid28ryyhtb/edit?usp=sharing&ouid=105587751018171349077&rtpof=true&sd=true)**
 -   🏗️ **[Architecture Diagram](./architecture_diagram.png)**
 -   📋 **[Requirements](./requirements.txt)**
 -   🐳 **[Dockerfile](./Dockerfile)**
