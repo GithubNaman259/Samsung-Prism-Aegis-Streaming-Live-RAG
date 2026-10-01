@@ -1,172 +1,336 @@
-# 🛡️ Aegis — A Streaming Live RAG Engine
+# 🛡️ Aegis --- Streaming Live RAG
 
-**Theme: Streaming Live RAG 04 · PRISM_GENAI_HACKATHON_Y2026**
+**PRISM_GENAI_HACKATHON_Y2026 · Streaming Live RAG**
 
-Aegis is an ultra-low latency, conversational Retrieval-Augmented Generation (RAG) engine designed for real-time voice and streaming interfaces. It starts retrieving **before the user finishes speaking**, splits compound queries into discrete sub-intents, fuses grounded evidence, and **patches existing answers with late constraints instead of restarting the entire pipeline**.
+> **Aegis makes RAG conversational by retrieving before speech ends,
+> isolating intents, routing work to the right reasoning mechanism, and
+> patching only what changes.**
 
----
+Aegis is a low-latency, stateful Retrieval-Augmented Generation (RAG)
+engine for real-time conversational interfaces.
 
-## 📌 Submission Deliverables & Links
+## 🔖 Final Submission
 
-* **Hackathon Release Tag:** PRISM_GENAI_HACKATHON_Y2026
-* **Demo Video Link (GDrive):** *[Click here to watch the Demo Video](https://drive.google.com/file/d/11YE5tzn1XtS09P18pabqhoy7KuI7gPUi/view?usp=sharing)*
-* **Presentation (PPT):** Included in repository: *[Click here for PPT](https://docs.google.com/presentation/d/1cOkf3m1hIk4gn8sUGFUrRhid28ryyhtb/edit?usp=sharing&ouid=105587751018171349077&rtpof=true&sd=true)*
-* **Architecture & Benchmark Report:** Documented below and in [eval/report.md](eval/report.md)
+**Required release tag:**
+[`PRISM_GENAI_HACKATHON_Y2026`](../../tree/PRISM_GENAI_HACKATHON_Y2026)
 
----
+**The tagged commit is the exact version submitted for evaluation.**
 
-## ⚡ Quick Start
+### 🔗 Submission Resources
 
-### Option A — Docker (One Command)
-`ash
+-   🎥 **[Demo Video --- Google
+    Drive](https://drive.google.com/file/d/11YE5tzn1XtS09P18pabqhoy7KuI7gPUi/view?usp=sharing)**
+-   📊 **[Final Presentation](./Aegis_Samsung_PRISM.pptx)**
+-   🏗️ **[Architecture Diagram](./architecture_diagram.png)**
+-   📋 **[Requirements](./requirements.txt)**
+-   🐳 **[Dockerfile](./Dockerfile)**
+-   🐳 **[Docker Compose](./docker-compose.yml)**
+
+> **Repository note:** Commit the final presentation using the filename
+> `Aegis_Final_Presentation.pptx` so the link above opens the PPT
+> directly from the repository.
+
+------------------------------------------------------------------------
+
+## 1. Problem
+
+Conventional conversational RAG commonly follows:
+
+``` text
+User finishes speaking → Retrieve → Generate → Answer
+```
+
+Aegis changes the execution model:
+
+``` text
+User starts speaking
+        ↓
+Speculative retrieval
+        ↓
+Intent decomposition
+        ↓
+Parallel evidence retrieval
+        ↓
+Hybrid synthesis
+        ↓
+Stateful claims
+        ↓
+Patch only changed claims
+```
+
+### Problems addressed
+
+  -----------------------------------------------------------------------
+  Problem                             Aegis approach
+  ----------------------------------- -----------------------------------
+  Voice / streaming latency           Provisional retrieval begins before
+                                      the utterance ends
+
+  Compound queries                    Independent intent decomposition
+                                      and retrieval
+
+  Late constraints                    Delta Engine patches affected
+                                      claims instead of rebuilding
+                                      everything
+
+  Numerical / structured constraints  Deterministic processing where
+                                      appropriate
+
+  Unsupported answers                 Claim-level grounding checks and a
+                                      visible grounding boundary
+  -----------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+## 2. Architecture
+
+The complete architecture is provided as a rendered image in the
+repository.
+
+**[Open the full Aegis Architecture
+Diagram](./architecture_diagram.png)**
+
+![Aegis Architecture Diagram](./architecture_diagram.png)
+
+------------------------------------------------------------------------
+
+## 3. Core Features
+
+### Speculative Provisional Retrieval
+
+Retrieval can begin from useful partial input while the user is still
+speaking. Reusable provisional evidence can be carried into the
+completed turn.
+
+### Multi-Intent Decomposition
+
+Compound requests are split into independent sub-intents so evidence for
+one intent does not contaminate another.
+
+### Hybrid Synthesis
+
+Different work is routed to the appropriate mechanism:
+
+``` text
+Structured / numerical constraint → Deterministic Solver
+Abstract policy / language         → LLM
+Late constraint                    → Delta Engine
+```
+
+### Delta Engine
+
+When a user changes a constraint, Aegis performs a semantic refinement
+instead of restarting the complete pipeline.
+
+``` text
+"Find a venue for my event"
+              ↓
+"Actually, I need capacity for 500 people"
+              ↓
+Identify affected claim
+              ↓
+Retrieve updated evidence
+              ↓
+Patch only that claim
+```
+
+### Trust Gauntlet
+
+Claims are checked against retrieved evidence. Unsupported or uncertain
+content is kept outside the trusted answer boundary.
+
+------------------------------------------------------------------------
+
+## 4. Evaluation Results
+
+  Metric                                                 Aegis    Baseline
+  ---------------------------------- ------------------------- -----------
+  Retrieval recall --- overall                       **91.0%**       91.7%
+  Single-intent recall                              **100.0%**      100.0%
+  Multi-intent recall                                **78.8%**       80.3%
+  Answer groundedness                  **100% (39/39 claims)**         ---
+  Fabricated document IDs                                **0**         ---
+  Median TTFT --- refine turn                      **11.2 ms**   122.15 ms
+  Refine-turn retrieval reduction                    **42.9%**         N/A
+  Trust Gauntlet adversarial tests              **4/4 passed**         ---
+
+Key refinement results: **11.2 ms median TTFT** and **42.9% lower
+retrieval activity** on refine turns.
+
+------------------------------------------------------------------------
+
+## 5. Technology Stack
+
+  Layer                      Technology
+  -------------------------- ----------------------------------------------------
+  Language                   Python 3.10+
+  Backend                    FastAPI, Uvicorn, Asyncio
+  Streaming                  WebSockets
+  LLM                        Llama 3.1 8B via Ollama
+  Retrieval                  Local vector retrieval + evidence/chunk management
+  Embeddings                 Local embedding model
+  Deterministic processing   Regex / token-based processing
+  Frontend                   HTML, CSS, JavaScript
+  Deployment                 Docker, Docker Compose
+
+------------------------------------------------------------------------
+
+## 6. Repository Structure
+
+``` text
+Aegis/
+├── backend/
+│   ├── controller.py
+│   ├── decomposer.py
+│   ├── pipeline.py
+│   ├── synthesis.py
+│   ├── suppression.py
+│   └── retrieval/
+├── corpus/
+├── frontend/
+├── eval/
+├── architecture_diagram.png
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── README.md
+└── Aegis_Final_Presentation.pptx
+```
+
+  ----------------------------------------------------------------------------------------
+  Path                                                 Purpose
+  ---------------------------------------------------- -----------------------------------
+  [`backend/controller.py`](./backend/controller.py)   Streaming control and speculative
+                                                       dispatch
+
+  [`backend/decomposer.py`](./backend/decomposer.py)   Multi-intent and refinement
+                                                       handling
+
+  [`backend/retrieval/`](./backend/retrieval/)         Evidence retrieval
+
+  [`backend/synthesis.py`](./backend/synthesis.py)     Hybrid synthesis, Delta Engine,
+                                                       Trust Gauntlet
+
+  [`backend/pipeline.py`](./backend/pipeline.py)       End-to-end orchestration and
+                                                       streaming
+
+  [`frontend/`](./frontend/)                           Real-time interface and telemetry
+
+  [`eval/`](./eval/)                                   Evaluation / benchmark scripts
+  
+  ----------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------
+
+## 7. Reproducible Setup
+
+### Requirements
+
+-   Python **3.10+**
+-   Git
+-   Docker + Docker Compose **or** a local Python environment
+-   Ollama is optional
+
+### Option A --- Docker
+
+From the repository root:
+
+``` bash
 docker compose up --build
-`
+```
+
 Open **<http://localhost:8000>**.
 
-### Option B — Local Setup (Python 3.10+)
-`ash
+Stop the application:
+
+``` bash
+docker compose down
+```
+
+### Option B --- Local Python
+
+Create the environment:
+
+``` bash
 python -m venv .venv
-# Windows:
-.venv\Scripts\activate
-# Linux / macOS:
-source .venv/bin/activate
+```
 
+**Windows**
+
+``` bat
+.venv\Scripts\activate
+```
+
+**macOS / Linux**
+
+``` bash
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+``` bash
 pip install -r requirements.txt
+```
+
+Build the corpus index:
+
+``` bash
 python -m corpus.build_index
+```
+
+Start Aegis:
+
+``` bash
 uvicorn backend.main:app --reload
-`
+```
+
 Open **<http://localhost:8000>**.
 
-### Local LLM Mode (Ollama)
-`ash
-# Optional: Run local Llama 3.1 8B or Qwen
+### Optional --- Ollama
+
+``` bash
 ollama run llama3.1:8b
+```
 
-# Environment variable (optional, defaults to local detection):
-="ollama"    # Windows PowerShell
-set AEGIS_LLM_PROVIDER=ollama       # Windows CMD
-export AEGIS_LLM_PROVIDER=ollama    # macOS/Linux
-`
-*Note: If Ollama is not running, Aegis automatically falls back to deterministic heuristic parsing without failing.*
+Set the provider:
 
----
+**Windows CMD**
 
-## 🏆 Benchmark & Evaluation Results
+``` cmd
+set AEGIS_LLM_PROVIDER=ollama
+```
 
-| Metric | Aegis | Naive Baseline | Target | Status |
-|---|---|---|---|---|
-| **Retrieval recall (overall)** | **91.0%** | 91.7% | ≥80% | **PASS** |
-| — single-intent | 100.0% | 100.0% | — | **PASS** |
-| — multi-intent | 78.8% | 80.3% | — | In range |
-| **Answer groundedness** | **100% (39/39 claims)** | — | ≥85% | **PASS** |
-| **Fabricated document IDs** | **0** | — | exactly 0 | **PASS** |
-| **Median TTFT (Refine Turn)** | **11.2 ms** | 122.15 ms | below baseline | **PASS** |
-| **Refine-turn retrieval reduction** | **42.9%** | n/a (no refine path) | >0 | **PASS** |
-| **Trust Gauntlet (adversarial)** | **4/4 passed** | — | — | **PASS** |
+**Windows PowerShell**
 
----
+``` powershell
+$env:AEGIS_LLM_PROVIDER="ollama"
+```
 
-## 🏗️ System Architecture
+**macOS / Linux**
 
-`mermaid
-flowchart TD
-    classDef user fill:#2C3E50,stroke:#34495E,stroke-width:2px,color:#fff
-    classDef core fill:#2980B9,stroke:#2471A3,stroke-width:2px,color:#fff
-    classDef retrieve fill:#27AE60,stroke:#1E8449,stroke-width:2px,color:#fff
-    classDef synth fill:#8E44AD,stroke:#7D3C98,stroke-width:2px,color:#fff
-    classDef output fill:#E67E22,stroke:#D35400,stroke-width:2px,color:#fff
-    classDef db fill:#7F8C8D,stroke:#707B7C,stroke-width:2px,color:#fff
+``` bash
+export AEGIS_LLM_PROVIDER=ollama
+```
 
-    User((User Voice Input)):::user
-    
-    subgraph Controller [Real-Time Controller]
-        Buffer[Audio/Text Buffer]:::core
-        Spec[Speculative Trigger]:::core
-    end
-    
-    subgraph RetrievalLayer [Retrieval Engine]
-        Prov[Provisional Search]:::retrieve
-        Decomp[Decomposer Multi-Intent Splitter]:::retrieve
-        Final[Final Parallel Retrieval]:::retrieve
-        VDB[(Enterprise Corpus)]:::db
-    end
+------------------------------------------------------------------------
 
-    subgraph SynthesisLayer [Hybrid Synthesis]
-        Route{Intent Router}:::synth
-        Det[Deterministic Solver Regex/Math]:::synth
-        LLM[LLM Engine Llama 3.1 8B]:::synth
-        Patch[Delta Engine Patch Refinement]:::synth
-        Gauntlet[Trust Gauntlet Anti-Hallucination]:::synth
-    end
+## 8. Verification
 
-    OutDraft[Stateful Claim Drafts]:::output
-    OutFinal((UI Output: Claims and Grounding Boundary)):::output
+Run the automated tests:
 
-    User --> Buffer
-    Buffer -- "Mid-sentence (2.7s)" --> Spec
-    Spec --> Prov
-    Prov --> VDB
-    
-    Buffer -- "Utterance Complete" --> Decomp
-    Decomp -- "Subqueries" --> Final
-    Final <--> VDB
-    
-    Prov -. "Reused Cache" .-> Final
-    
-    Final --> Route
-    Route -- "Venue/Math" --> Det
-    Route -- "Abstract Policy" --> LLM
-    Route -- "Late Constraint" --> Patch
-    
-    Det --> OutDraft
-    LLM --> OutDraft
-    Patch --> OutDraft
-    
-    OutDraft --> Gauntlet
-    Gauntlet -- "Pass" --> OutFinal
-    Gauntlet -- "Fail/Uncertain" --> OutFinal
-`
+``` bash
+pytest -q
+```
 
-### Core Architecture Components
+Run the evaluation suite:
 
-| Module | Role |
-|---|---|
-| ackend/controller.py | Streaming controller, silence detection, drift gate, and speculative dispatch |
-| ackend/decomposer.py | Sub-query decomposition, orthogonality guard, and refine-turn classifier |
-| ackend/retrieval/ | Hybrid retrieval: Sparse BM25 + Dense vector search + Reciprocal Rank Fusion (RRF) |
-| ackend/synthesis.py | Hybrid synthesis (Deterministic math solver + LLM), Delta Engine patcher, and Trust Gauntlet |
-| ackend/suppression.py | Presentation-only query gate (zero-search cache reuse) |
-| ackend/pipeline.py | Core orchestration pipeline with WebSocket streaming |
-| rontend/ | Real-time text-delta client, telemetry trace, latency timers, and source inspector |
+``` bash
+python eval/run_eval.py
+```
 
----
+Then verify the application at **<http://localhost:8000>**.
 
-## 🌟 Key Innovations & Differentiators
-
-1. **Speculative Provisional Retrieval:** Aegis retrieves candidate chunks while the speaker is mid-utterance, cutting conversational latency to near zero.
-2. **Hybrid Synthesis (0% Math Hallucination):** Numerical and capacity constraints bypass the LLM and are resolved by deterministic solvers, guaranteeing 100% precision on venue seating, rates, and thresholds.
-3. **Stateful Delta Refinement:** When constraints change (*"Actually make it 500 people"*), Aegis performs a semantic diff and patches *only* the affected claim in under 15ms without restarting the turn.
-4. **Trust Gauntlet & Grounding Boundary:** Strict lexical and entailment checks prevent out-of-corpus hallucinations. Unanswerable components are cleanly isolated into the Grounding Boundary UI.
-
----
-
-## 🛠️ Tech Stack & Requirements
-
-* **Language:** Python 3.10+
-* **Backend:** FastAPI, Uvicorn, WebSockets, Asyncio
-* **Data & Models:** Local NumPy vector indices, BM25, Ollama (Llama 3.1 8B / Qwen)
-* **Frontend:** Vanilla JavaScript, HTML5 WebSocket UI, Realtime CSS Audio Waveform
-* **DevOps:** Docker, Docker Compose
-
----
-
-## 📋 Hackathon Submission Checklist
-
-- [x] Working code with clean repository structure
-- [x] Minimal dependency manifest (
-equirements.txt)
-- [x] Comprehensive architectural README.md
-- [x] Verification and test suite (pytest -q, eval/run_eval.py)
-- [ ] Add your presentation PPT file (.pptx) in root folder
-- [ ] Add your demo video or YouTube/Drive link in README.md
-- [ ] Create GitHub Release Tag: PRISM_GENAI_HACKATHON_Y2026
+------------------------------------------------------------------------
+**[🎥 Watch the Aegis
+Demo](https://drive.google.com/file/d/11YE5tzn1XtS09P18pabqhoy7KuI7gPUi/view?usp=sharing)**
